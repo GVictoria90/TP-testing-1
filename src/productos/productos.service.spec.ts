@@ -1,15 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ProductosService } from './productos.service';
+import { ProductService } from './productos.service';
 
-describe('ProductosService', () => {
-  let service: ProductosService;
+describe('ProductService', () => {
+  let service: ProductService; // se declara como let porque al hacerlo como consante da error
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [ProductosService],
+      providers: [ProductService],
     }).compile();
 
-    service = module.get<ProductosService>(ProductosService);
+    service = module.get<ProductService>(ProductService);
   });
 
   it('should be defined', () => {

@@ -1,26 +1,46 @@
-import { Injectable } from '@nestjs/common';
-import { CreateProductoDto } from './dto/create-producto.dto';
-import { UpdateProductoDto } from './dto/update-producto.dto';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { Products } from './dto/producto.dto';
 
 @Injectable()
-export class ProductosService {
-  create(createProductoDto: CreateProductoDto) {
-    return 'This action adds a new producto';
+export class ProductService {
+  private products: Products[] = [];
+
+  findAll(): Products[] {
+    return this.products;
   }
 
-  findAll() {
-    return `This action returns all productos`;
+  findById(id: number): Products {
+    const product = this.products.find(p => p.id === id);
+    if (!product) {
+      throw new NotFoundException('Product not found');
+    }
+    return product;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} producto`;
+  create(product: Products): Products {
+    // aca va el codigo
+    this.products.push(product);
+    return product;
   }
 
-  update(id: number, updateProductoDto: UpdateProductoDto) {
-    return `This action updates a #${id} producto`;
+  update(id: number, product: Products): Products {
+    const index = this.products.findIndex(p => p.id === id);
+    if (index === -1) {
+      throw new NotFoundException('Producto no encontrado');
+    }
+    // Lógica para actualizar un producto
+    this.products[index] = { ...this.products[index], ...product };
+    return this.products[index];
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} producto`;
+  delete(id: number): Products {
+    const index = this.products.findIndex(p => p.id === id);
+    if (index === -1) {
+      throw new NotFoundException('producto no encontrado');
+    }
+    // Lógica para eliminar un producto
+    const deletedProduct = this.products[index];
+    this.products.splice(index, 1);
+    return deletedProduct;
   }
 }
