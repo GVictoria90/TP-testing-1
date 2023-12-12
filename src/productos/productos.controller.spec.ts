@@ -17,33 +17,33 @@ describe('ProductController', () => {
     service = module.get<ProductService>(ProductService);
   });
 
-  it('should be defined', () => {
+  it('Definir', () => {
     expect(controller).toBeDefined();
   });
 
   describe('findAll', () => {
-    it('should return an array of products', () => {
+    it('Debe retornar un array con los datos', () => {
       jest.spyOn(service, 'findAll').mockReturnValueOnce([{ id: 1, nombre: 'PIZARRA', precio: 1000 }]);
-      expect(controller.findAll()).toEqual([{ id: '1', nombre: 'PIZARRA', precio: 1000 }]);
+      expect(controller.findAll()).toEqual([{ id: 1, nombre: 'PIZARRA', precio: 1000 }]);
     });
   });
 
   describe('findById', () => {
-    it('should return a specific product by ID', () => {
+    it('debe regresar un producto con el id', () => {
       jest.spyOn(service, 'findById').mockReturnValueOnce({ id: 1, nombre: 'PIZARRA', precio: 1500 });
-      expect(controller.findById(1)).toEqual({ id: '1', nombre: 'PIZARRA', precio: 1500 });
+      expect(controller.findById(1)).toEqual({ id: 1, nombre: 'PIZARRA', precio: 1500 });
     });
 
-    it('should throw NotFoundException if the product is not found', () => {
+    it('Regresa una excepcion si no se encuentra', () => {
       jest.spyOn(service, 'findById').mockImplementation(() => {
-        throw new NotFoundException('Product not found');
+        throw new NotFoundException('Producto no encontrado');
       });
-      expect(() => controller.findById('nonexistent')).toThrow(NotFoundException);
+      expect(() => controller.findById(1)).toThrow(NotFoundException);
     });
   });
 
   describe('create', () => {
-    it('should create and return a new product', () => {
+    it('Crea un producto y lo regresa', () => {
       const newProduct = {id: 0, nombre: 'Nuevo ingreso', precio: 2000 };
       jest.spyOn(service, 'create').mockReturnValueOnce({ id: 2, ...newProduct });
       expect(controller.create(newProduct)).toEqual({ id: 2, ...newProduct });
@@ -60,23 +60,23 @@ describe('ProductController', () => {
     it('si no se encuentra, envia una excepcion', () => {
       const updatedProduct = {id: 1, nombre: 'PIZARRON', precio: 2000};
       jest.spyOn(service, 'update').mockImplementation(() => {
-        throw new NotFoundException('Product not found');
+        throw new NotFoundException('Producto no encontrado');
       });
-      expect(() => controller.update('nonexistent', updatedProduct)).toThrow(NotFoundException);
+      expect(() => controller.update(1, updatedProduct)).toThrow(NotFoundException);
     });
   });
 
   describe('delete', () => {
     it('si se borra de forma exitosa retorna', () => {
       jest.spyOn(service, 'delete').mockReturnValueOnce({ id: 1, nombre: 'PIZARRA', precio: 2000 });
-      expect(controller.delete(1)).toEqual({ id: 1, nombre: 'PIZARRA' });
+      expect(controller.delete(1)).toEqual({ id: 1, nombre: 'PIZARRA', precio: 2000 });
     });
 
     it('Si no se encuentra el producto envia una excepcion', () => {
       jest.spyOn(service, 'delete').mockImplementation(() => {
         throw new NotFoundException('Producto no encontrado');
       });
-      expect(() => controller.delete('NoExiste')).toThrow(NotFoundException);
+      expect(() => controller.delete(1)).toThrow(NotFoundException);
     });
   });
 });
